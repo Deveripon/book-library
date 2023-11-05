@@ -9,6 +9,8 @@ import { connectToMongoDb } from "./config/mongodbConnection.js";
 import userRouter from "./routes/authRoutes/userRouter.js";
 import loginRouter from "./routes/authRoutes/loginRouter.js";
 import cookieParser from "cookie-parser";
+import writerRouter from "./routes/writer/writerRoutes.js";
+import bookRouter from "./routes/books/bookRoutes.js";
 
 dotenv.config();
 
@@ -27,6 +29,8 @@ app.use(cookieParser());
 
 app.use("/users", userRouter);
 app.use("/login", loginRouter);
+app.use("/writer", writerRouter);
+app.use("/books", bookRouter);
 //add error handlers
 app.use(__404ErrorHandler);
 app.use(__errorHandler);

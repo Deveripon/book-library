@@ -10,7 +10,7 @@ export const __errorHandler = (err, req, res, next) => {
         });
     } else {
         res.status(err.status || 500).send({
-            error: "There was an error processing the request",
+            error: err,
         });
     }
 };

@@ -1,22 +1,25 @@
-import check, { query, validationResult } from "express-validator";
+import { User } from "../../models/User.js";
 
-export const schemaValidator = [
-    query("name", "name field is required")
-        .isAlpha()
-        .withMessage("No special character is allowed"),
-    query("email", "email field is required")
-        .isEmail()
-        .withMessage("invalid email address")
-        .toLowerCase(),
-    query("password", "password field is required"),
-    query("username", "username field is required"),
-];
-
-export const getValidationResult = (req, res, next) => {
-    const result = validationResult(req);
-    if (result.isEmpty()) {
-        return next();
-    } else {
-        next(result);
+export const validateUserForm = async (req, res, next) => {
+    //validate required fields
+    const { name, email, username, password } = req.body;
+    if (!name) {
+        next("Name Field is required");
+    } else if (!email) {
+        next("email Field is required");
+    } else if (!username) {
+        next("username Field is required");
+    } else if (!password) {
+        next("password Field is required");
     }
+
+    //validate unique fields
+    const userEmail = await User.findOne({ email: req.body.email });
+    const userUsername = await User.findOne({ username: req.body.username });
+    if (userEmail) {
+        next("This email address is already in use");
+    } else if (userUsername) {
+        next("This Username has been taken");
+    }
+    next();
 };
